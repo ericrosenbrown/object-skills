@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<robot name="microwave">
+  <link name="base_link">
+  </link>
+
+  <link name="door">
+    <visual>
+      <geometry>
+        <box size="0.6 0.1 0.2"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="-0.3 0 0"/>
+    </visual>
+  </link>
+
+  
+  <link name="handle">
+    <visual>
+      <geometry>
+        <sphere radius="0.05"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </visual>
+  </link>
+
+  <joint name="base_to_door" type="revolute">
+    <axis xyz="0 0 1" />
+    <limit effort="1000.0" lower ="-1" upper ="1" velocity="0.5" />
+    <parent link="base_link"/>
+    <child link="door"/>
+    <origin xyz="0 0 0"/>
+  </joint>
+
+  <joint name="door_to_handle" type="fixed">
+    <parent link="door"/>
+    <child link="handle"/>
+    <origin xyz = "-0.5 .1 0"/>
+  </joint>
+
+</robot>

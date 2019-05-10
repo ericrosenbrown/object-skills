@@ -46,7 +46,7 @@ group_names = robot.get_group_names()
 
 joint_goal = group.get_current_joint_values()
 #print(joint_goal)
-joint_goal[0] = random.uniform(-0.3,0.3)
+joint_goal[0] = 0.8#random.uniform(-0.3,0.3)
 
 group.go(joint_goal, wait=True)
 
@@ -54,21 +54,28 @@ plan = rospy.wait_for_message('/move_group/display_planned_path',moveit_msgs.msg
 
 jt = plan.trajectory[0].joint_trajectory #plan for the joint trajectory!
 print("joint plan!")
-print(jt.points[0])
+#print(len(plan.trajectory))
+#print(jt.points[0].positions[0]) #first index is which point, second index just gets joint value out of tuple
+print(len(jt.points))
 print("end joint plan!")
 
 fk = rospy.ServiceProxy('/compute_fk', GetPositionFK)
 
-r = moveit_commander.RobotState()
+ee_poses = []
+for i in range(len(jt.points)): #loop through the plan
+    r = moveit_commander.RobotState()
 
-header = Header(0,rospy.Time.now(),"/base_link")
-joint_names = jt.joint_names
-joint_positions = [0.8]
-fkIn = ["base_link","door","handle"]
-r.joint_state.name = joint_names
-r.joint_state.position = joint_positions
-#rospy.loginfo(fk(header,fkIn,r))
-#print("hey")
-#print(r)
-a = fk(header,fkIn,robot.get_current_state())
-#print(a.pose_stamped) #print fk pose
+    header = Header(0,rospy.Time.now(),"/base_link")
+    joint_names = jt.joint_names
+    joint_positions = [jt.points[i].positions[0]]
+    fkIn = ["base_link","door","handle"]
+    r.joint_state.name = joint_names
+    r.joint_state.position = joint_positions
+    #rospy.loginfo(fk(header,fkIn,r))
+    #print("hey")
+    #print(r)
+    a = fk(header,fkIn,robot.get_current_state())
+    #print(a.pose_stamped[-1]) #print fk pose, -1 because we only care about the fk of the last link, handle.
+    ee_poses.append(a.pose_stamped[-1].pose)
+
+print(ee_poses)

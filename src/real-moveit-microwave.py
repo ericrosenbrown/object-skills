@@ -20,7 +20,7 @@ robot = moveit_commander.RobotCommander()
 
 scene = moveit_commander.PlanningSceneInterface()
 
-group_name = "door_plan"
+group_name = "real2_door_plan"
 group = moveit_commander.MoveGroupCommander(group_name)
 
 display_trajectory_publisher = rospy.Publisher('/move_group/display_planned_path',
@@ -47,7 +47,7 @@ group_names = robot.get_group_names()
 
 joint_goal = group.get_current_joint_values()
 #print(joint_goal)
-joint_goal[0] = 0.8#random.uniform(-0.3,0.3)
+joint_goal[0] = 1.57#random.uniform(-0.3,0.3)
 
 group.go(joint_goal, wait=True)
 
@@ -80,4 +80,4 @@ for i in range(len(jt.points)): #loop through the plan
     #print(a.pose_stamped)
     ee_poses.append(a.pose_stamped[-1].pose)
 print(ee_poses)
-pickle.dump(ee_poses,open("microwave_poses.p", "wb" ) )
+pickle.dump(ee_poses,open("real2_microwave_poses.p", "wb" ) )

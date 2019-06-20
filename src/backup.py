@@ -1,5 +1,4 @@
 import sys
-import pickle
 import random
 import copy
 import rospy
@@ -75,9 +74,10 @@ for i in range(len(jt.points)): #loop through the plan
     #rospy.loginfo(fk(header,fkIn,r))
     #print("hey")
     #print(r)
-    a = fk(header,fkIn,r)
+    a = fk(header,fkIn,robot.get_current_state())
     #print(a.pose_stamped[-1]) #print fk pose, -1 because we only care about the fk of the last link, handle.
-    #print(a.pose_stamped)
+    print(a.pose_stamped)
     ee_poses.append(a.pose_stamped[-1].pose)
-print(ee_poses)
-pickle.dump(ee_poses,open("microwave_poses.p", "wb" ) )
+
+#print(ee_poses[0])
+#print(ee_poses[-1])
